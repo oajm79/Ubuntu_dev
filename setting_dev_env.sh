@@ -196,6 +196,7 @@ echo -e "-----------------------------------------------------------------------
 echo -e "Instala el Oracle instant_client\n" >>$FILE_LOG
 wget https://download.oracle.com/otn_software/linux/instantclient/219000/instantclient-basic-linux.x64-21.9.0.0.0dbru.zip
 sudo unzip instantclient-basic-linux.x64-21.9.0.0.0dbru.zip
+sudo rm instantclient-basic-linux.x64-21.9.0.0.0dbru.zip
 sudo mkdir /opt/oracle
 sudo mv instantclient_21_9 /opt/oracle/
 sudo sh -c "echo /opt/oracle/instantclient_21_9 > /etc/ld.so.conf.d/oracle-instantclient.conf"
@@ -204,8 +205,10 @@ export LD_LIBRARY_PATH=/opt/oracle/instantclient_21_9:$LD_LIBRARY_PATH
 export PATH=/opt/oracle/instantclient_21_9:$PATH
 wget https://download.oracle.com/otn_software/linux/instantclient/219000/instantclient-sqlplus-linux.x64-21.9.0.0.0dbru.zip
 sudo unzip instantclient-sqlplus-linux.x64-21.9.0.0.0dbru.zip
+sudo rm instantclient-sqlplus-linux.x64-21.9.0.0.0dbru.zip
 cd instantclient_21_9/
 sudo mv * /opt/oracle/instantclient_21_9/
+sudo rm -r instantclient_21_9/
 echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
 
 echo -e "Reinicia el entorno de desarrollo\n" >>$FILE_LOG

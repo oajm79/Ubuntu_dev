@@ -13,46 +13,32 @@ while [ "$valid_password" = false ]; do
     fi
 done
 
-read -p "Introduzca el nombre del entorno virtual de python: " python_vent
+read -p "Enter python virtual enviroment name: " python_vent
 echo -e "\n"
 PY_VENT_DIR=$DIR/$python_vent
 
-echo -e "Actualiza repositorios\n" >>$FILE_LOG
+echo -e "Update repositories\n" >>$FILE_LOG
 sudo apt -y update
 sudo apt -y upgrade
 echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
 
-echo -e "Instala Apache\n" >>$FILE_LOG
+echo -e "Install and set up apache\n" >>$FILE_LOG
 sudo apt -y install apache2 unzip
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
-
-echo -e "Actualiza el puerto de escucha\n" >>$FILE_LOG
 sudo cp /etc/apache2/ports.conf /etc/apache2/ports.conf.bak
 sudo sed -i 's/Listen 80/Listen 8081/' "/etc/apache2/ports.conf"
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
-
 echo -e "Reinicia apache para cargar los cambios\n" >>$FILE_LOG
 sudo service apache2 restart
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
-
-echo -e "Actualiza la carpeta de trabajo de apache\n" >>$FILE_LOG
 sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf.bak
 #sudo sed -i 's///' /etc/apache2/sites-available/000-default.conf
 sudo sed -i 's|DocumentRoot /var/www/hml|DocumentRoot /var/www|' /etc/apache2/sites-available/000-default.conf
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
-
-echo -e "Asigna permisos al usuario actual a la carpeta de trabajo de apache\n" >>$FILE_LOG
 sudo chown -R $USER:$USER /var/www
 sudo chmod -R 755 /var/www
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
-
-echo -e "Actualiza configuraciones de apache\n" >>$FILE_LOG
 sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf.bak
 sudo sed -i 's/User root/'"User $USER"'/' /etc/apache2/apache2.conf
 sudo sed -i 's/Group root/'"Group $USER"'/' /etc/apache2/apache2.conf
 echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
 
-echo -e "Instala PHP\n" >>$FILE_LOG
+echo -e "Install PHP\n" >>$FILE_LOG
 sudo apt install -y php libapache2-mod-php php-mysql php-xml php-cli php-curl php-zip php-json php-mbstring
 PHP_VER=$(php -v | grep -Po "[0-9]\.[0-9]" | head -n 1)
 echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG

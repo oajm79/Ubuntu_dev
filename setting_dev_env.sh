@@ -190,7 +190,22 @@ echo -e "-----------------------------------------------------------------------
 echo -e "Instala el componente venv de Python y configura un el entorno virtual\n" >>$FILE_LOG
 sudo apt -y install python3.10-venv python3-pip
 sudo python3 -m venv $PY_VENT_DIR
-sudo chown $USER: $PY_VENT_DIR
+sudo chown -R $USER: $PY_VENT_DIR
+echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
+
+echo -e "Instala el Oracle instant_client\n" >>$FILE_LOG
+wget https://download.oracle.com/otn_software/linux/instantclient/219000/instantclient-basic-linux.x64-21.9.0.0.0dbru.zip
+sudo unzip instantclient-basic-linux.x64-21.9.0.0.0dbru.zip
+sudo mkdir /opt/oracle
+sudo mv instantclient_21_9 /opt/oracle/
+sudo sh -c "echo /opt/oracle/instantclient_21_9 > /etc/ld.so.conf.d/oracle-instantclient.conf"
+sudo ldconfig
+export LD_LIBRARY_PATH=/opt/oracle/instantclient_21_9:$LD_LIBRARY_PATH
+export PATH=/opt/oracle/instantclient_21_9:$PATH
+wget https://download.oracle.com/otn_software/linux/instantclient/219000/instantclient-sqlplus-linux.x64-21.9.0.0.0dbru.zip
+sudo unzip instantclient-sqlplus-linux.x64-21.9.0.0.0dbru.zip
+cd instantclient_21_9/
+sudo mv * /opt/oracle/instantclient_21_9/
 echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
 
 echo -e "Reinicia el entorno de desarrollo\n" >>$FILE_LOG

@@ -192,4 +192,4 @@ sudo python3 -m venv $PY_VENT_DIR
 echo "---------------------------------------------------------------------------------\n" >>$FILE_LOG
 
 echo "Reinicia el entorno de desarrollo\n" >>$FILE_LOG
-sudo ./dev_env_opt restart
+sudo .$DIR/dev_env_opt restart

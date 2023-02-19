@@ -5,6 +5,7 @@ FILE_LOG=$DIR/setting_dev_env_$DATE.log
 valid_password=false
 while [ "$valid_password" = false ]; do
     read -s -p "Introduzca el password que usara el usuario root en MySQL: " password_a
+    echo "\n"
     read -s -p "Confirme el password del usuario root en MySQL: " password_b
     if [ "$password_a" == "$password_b" ]; then
         echo "Se define la contraseña de usuario root en MySQL: ${password_a}\n" >>$FILE_LOG
@@ -18,7 +19,7 @@ PY_VENT_DIR=$DIR/$python_vent
 echo "Actualiza repositorios\n" >>$FILE_LOG
 sudo apt -y update
 sudo apt -y upgrade
-echo "---------------------------------------------------------------------------------\n" >>$FILE_LOG
+echo "--------------------------------------------------------------------------------- \n" >>$FILE_LOG
 
 echo "Instala Apache\n" >>$FILE_LOG
 sudo apt -y install apache2 unzip
@@ -48,7 +49,7 @@ echo "Actualiza configuraciones de apache\n" >>$FILE_LOG
 sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf.bak
 sudo sed -i 's/User root/'"User $USER"'/' /etc/apache2/apache2.conf
 sudo sed -i 's/Group root/'"Group $USER"'/' /etc/apache2/apache2.conf
-echo "---------------------------------------------------------------------------------\n" >>$FILE_LOG
+echo "--------------------------------------------------------------------------------- \n" >>$FILE_LOG
 
 echo "Instala PHP\n" >>$FILE_LOG
 sudo apt install -y php libapache2-mod-php php-mysql php-xml php-cli php-curl php-zip php-json php-mbstring

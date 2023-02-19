@@ -184,3 +184,5 @@ echo "--------------------------------------------------------------------------
 echo "Instala el componente venv de Python y configura un el entorno virtual"
 sudo apt -y install python3.10-venv
 sudo python3 -m venv $PY_VENT_DIR
+
+sudo ./dev_env_opt restart

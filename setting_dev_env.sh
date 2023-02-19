@@ -188,8 +188,9 @@ sudo chown $USER: dev_env_opt.sh update_ubuntu.sh uninstall_packages.sh
 echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
 
 echo -e "Instala el componente venv de Python y configura un el entorno virtual\n" >>$FILE_LOG
-sudo apt -y install python3.10-venv
+sudo apt -y install python3.10-venv python3-pip
 sudo python3 -m venv $PY_VENT_DIR
+sudo chown $USER: $PY_VENT_DIR
 echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
 
 echo -e "Reinicia el entorno de desarrollo\n" >>$FILE_LOG

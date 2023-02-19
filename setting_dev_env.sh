@@ -68,7 +68,7 @@ WSLIP=$(grep nameserver /etc/resolv.conf | cut -d ' ' -f2)
 sudo bash -c "echo "xdebug.remote_host=$WSLIP" >> /etc/php/$PHP_VER/apache2/conf.d/20-xdebug.ini"
 sudo cp ~/.bashrc ~/bashrc.bak
 sudo chmod -R og+w /etc/php/$PHP_VER/apache2/conf.d/ #current user need to be able to write to the file
-sudo echo 'sed -ri "s|xdebug.remote_host=[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}|xdebug.remote_host='$WSLIP'|" /etc/php/'$PHP_VER'/apache2/conf.d/20-xdebug.ini' >> ~/.bashrc
+sudo echo 'sed -ri "s|xdebug.remote_host=[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}|xdebug.remote_host=' + $WSLIP + '|" /etc/php/' + $PHP_VER + '/apache2/conf.d/20-xdebug.ini' >> ~/.bashrc
 echo "---------------------------------------------------------------------------------\n" >>$FILE_LOG
 
 echo "Instala MySQL\n" >>$FILE_LOG

@@ -5,10 +5,11 @@ FILE_LOG=$DIR/setting_dev_env_$DATE.log
 valid_password=false
 while [ "$valid_password" = false ]; do
     read -s -p "Introduzca el password que usara el usuario root en MySQL: " password_a
-    echo "\n"
+    echo -e "\n"
     read -s -p "Confirme el password del usuario root en MySQL: " password_b
+    echo -e "\n"
     if [ "$password_a" == "$password_b" ]; then
-        echo "Se define la contraseña de usuario root en MySQL: ${password_a}\n" >>$FILE_LOG
+        echo "Se define la contraseña de usuario root en MySQL: ${password_a} \n" >>$FILE_LOG
         valid_password=true
     fi
 done

@@ -1,6 +1,7 @@
 # Developer environment deployer
 Program to generate a functional WSL development environment on the Ubuntu 22.04 distribution
 
+<<<<<<< HEAD
 <h1>This shell script implements the following items:</h1>
 
 <ul>
@@ -26,3 +27,15 @@ It is assumed that before running this deployment, Ubuntu is already installed a
     <li>Let the execution finish</li>
     
 </ol>
+=======
+This shell script implements the following items:
+
+<ul>
+Apache
+PHP
+MySQL
+phpMyAdmin
+Python Virtual Enviroment
+Oracle Instant Client
+<ul/>
+>>>>>>> 3098c56383935f93cf884d9c48e079113db3ee70

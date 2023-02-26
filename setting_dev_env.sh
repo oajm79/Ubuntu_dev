@@ -39,7 +39,6 @@ sudo sed -i 's/Group root/'"Group $USER"'/' /etc/apache2/apache2.conf
 sudo cat > /var/www/html/phpinfo.php<<FILE_TEXT
 <?php phpinfo(); ?>
 FILE_TEXT
-
 echo -e "Apache installed and configured->\n" >>$FILE_LOG
 
 echo -e "<-Install PHP\n" >>$FILE_LOG

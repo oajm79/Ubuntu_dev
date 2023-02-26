@@ -18,16 +18,15 @@ read -p "Enter python virtual enviroment name: " python_vent
 echo -e "\n"
 PY_VENT_DIR=$DIR/$python_vent
 
-echo -e "Update repositories\n" >>$FILE_LOG
+echo -e "<-Update repositories\n" >>$FILE_LOG
 sudo apt -y update
 sudo apt -y upgrade
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
+echo -e "Repositories updated->\n" >>$FILE_LOG
 
-echo -e "Install and set up apache\n" >>$FILE_LOG
+echo -e "<-Install and set up apache\n" >>$FILE_LOG
 sudo apt -y install apache2 unzip
 sudo cp /etc/apache2/ports.conf /etc/apache2/ports.conf.bak
 sudo sed -i 's/Listen 80/Listen 8081/' "/etc/apache2/ports.conf"
-echo -e "Reinicia apache para cargar los cambios\n" >>$FILE_LOG
 sudo service apache2 restart
 sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf.bak
 #sudo sed -i 's///' /etc/apache2/sites-available/000-default.conf
@@ -37,14 +36,17 @@ sudo chmod -R 755 /var/www
 sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf.bak
 sudo sed -i 's/User root/'"User $USER"'/' /etc/apache2/apache2.conf
 sudo sed -i 's/Group root/'"Group $USER"'/' /etc/apache2/apache2.conf
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
+sudo cat > /var/www/html/phpinfo.php<<FILE_TEXT
+<?php phpinfo(); ?>
+FILE_TEXT
+echo -e "Apache installed and configured->\n" >>$FILE_LOG
 
-echo -e "Install PHP\n" >>$FILE_LOG
-sudo apt install -y php libapache2-mod-php php-mysql php-xml php-cli php-curl php-zip php-json php-mbstring
+echo -e "<-Install PHP\n" >>$FILE_LOG
+sudo apt install -y php libapache2-mod-php php-mysql php-xml php-cli php-curl php-zip php-json php-mbstring php-pear php-dev
 PHP_VER=$(php -v | grep -Po "[0-9]\.[0-9]" | head -n 1)
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
+echo -e "PHP installed->\n" >>$FILE_LOG
 
-echo -e "Install and set up xdebug\n" >>$FILE_LOG
+echo -e "<-Install and set up xdebug\n" >>$FILE_LOG
 sudo apt-get install -y php-xdebug
 sudo cp /etc/php/$PHP_VER/apache2/conf.d/20-xdebug.ini /etc/php/$PHP_VER/apache2/conf.d/20-xdebug.ini.bak
 sudo bash -c "echo 'xdebug.remote_enable=1' >> /etc/php/$PHP_VER/apache2/conf.d/20-xdebug.ini"
@@ -55,31 +57,20 @@ sudo bash -c "echo "xdebug.remote_host=$WSLIP" >> /etc/php/$PHP_VER/apache2/conf
 sudo cp ~/.bashrc ~/bashrc.bak
 sudo chmod -R og+w /etc/php/$PHP_VER/apache2/conf.d/ #current user need to be able to write to the file
 sudo echo 'sed -ri "s|xdebug.remote_host=[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}|xdebug.remote_host='$WSLIP'|" /etc/php/'$PHP_VER'/apache2/conf.d/20-xdebug.ini' >> ~/.bashrc
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
+echo -e "xdebug installed and configured->\n" >>$FILE_LOG
 
-echo -e "Install and set up MySQL\n" >>$FILE_LOG
+echo -e "<-Install and set up MySQL\n" >>$FILE_LOG
 sudo apt -y install mysql-server
 sudo chown mysql:mysql -R /var/run/mysqld/
 sudo chmod 755 -R /var/run/mysqld/
 sudo usermod -d /var/lib/mysql/ mysql
 sudo service mysql start
-#echo -e "Copia la siguiente linea y pegala en el promt de MySQL para ejecutarla:"
-#echo -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$password_a';\n"
 sudo mysql -Bse "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$password_a';"
-#sudo mysql_secure_installation
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
+echo -e "MySQL installed and configured->\n" >>$FILE_LOG
 
-echo -e "Install and set up phpmyadmin\n" >>$FILE_LOG
-#sudo apt install -y phpmyadmin
-wget https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-english.zip
-unzip phpMyAdmin-5.2.1-english.zip
-sudo rm phpMyAdmin-5.2.1-english.zip
-sudo mv phpMyAdmin-5.2.1-english /usr/share/phpmyadmin
-sudo mkdir /usr/share/phpmyadmin/tmp 
-sudo chown -R www-data:www-data /usr/share/phpmyadmin
-sudo chmod 777 /usr/share/phpmyadmin/tmp
-sudo chmod 777 /etc/apache2/conf-available/
-sudo cat > /etc/apache2/conf-available/phpmyadmin.conf<<FILE_TEXT
+echo -e "<-Install and set up phpmyadmin\n" >>$FILE_LOG
+sudo apt install -y phpmyadmin
+sudo cat > phpmyadmin.conf<<FILE_TEXT
 Alias /phpmyadmin /usr/share/phpmyadmin
 Alias /phpMyAdmin /usr/share/phpmyadmin
  
@@ -100,10 +91,11 @@ Alias /phpMyAdmin /usr/share/phpmyadmin
    </IfModule>
 </Directory>
 FILE_TEXT
+sudo mv phpmyadmin.conf /etc/apache2/conf-available/phpmyadmin.conf
 sudo a2enconf phpmyadmin
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
+echo -e "phpmyadmin installed and configured->\n" >>$FILE_LOG
 
-echo -e "Create enviroment control file\n" >>$FILE_LOG
+echo -e "<-Create enviroment control file\n" >>$FILE_LOG
 sudo cat > dev_env_opt.sh<<FILE_TEXT
 #!/bin/bash
 OPTION="\${1^^}"
@@ -123,9 +115,9 @@ else
     echo "The options are start, stop and restart";
 fi
 FILE_TEXT
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
+echo -e "Enviroment control file created->\n" >>$FILE_LOG
 
-echo -e "Create Ubuntu maintenance files\n" >>$FILE_LOG
+echo -e "<-Create Ubuntu maintenance files\n" >>$FILE_LOG
 sudo cat > update_ubuntu.sh<<FILE_TEXT
 #!/bin/bash
 echo "Comienza el update"
@@ -160,32 +152,42 @@ FILE_TEXT
 
 sudo chmod 777 dev_env_opt.sh update_ubuntu.sh uninstall_packages.sh
 sudo chown $USER: dev_env_opt.sh update_ubuntu.sh uninstall_packages.sh
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
+echo -e "Ubuntu maintenance files created->" >>$FILE_LOG
 
-echo -e "Install Python components\n" >>$FILE_LOG
+echo -e "<-Install Python components\n" >>$FILE_LOG
 sudo apt -y install python3.10-venv python3-pip
 sudo python3 -m venv $PY_VENT_DIR
 sudo chown -R $USER: $PY_VENT_DIR
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
+echo -e "Python components installed\n" >>$FILE_LOG
 
-echo -e "Install and set up Oracle instant_client\n" >>$FILE_LOG
+echo -e "<-Install and set up Oracle instant_client\n" >>$FILE_LOG
 wget https://download.oracle.com/otn_software/linux/instantclient/219000/instantclient-basic-linux.x64-21.9.0.0.0dbru.zip
-sudo unzip instantclient-basic-linux.x64-21.9.0.0.0dbru.zip
-sudo rm instantclient-basic-linux.x64-21.9.0.0.0dbru.zip
-sudo mkdir /opt/oracle
-sudo mv instantclient_21_9 /opt/oracle/
-sudo sh -c "echo /opt/oracle/instantclient_21_9 > /etc/ld.so.conf.d/oracle-instantclient.conf"
-sudo ldconfig
-export LD_LIBRARY_PATH=/opt/oracle/instantclient_21_9:$LD_LIBRARY_PATH
-export PATH=/opt/oracle/instantclient_21_9:$PATH
+wget https://download.oracle.com/otn_software/linux/instantclient/219000/instantclient-sdk-linux.x64-21.9.0.0.0dbru.zip
 wget https://download.oracle.com/otn_software/linux/instantclient/219000/instantclient-sqlplus-linux.x64-21.9.0.0.0dbru.zip
+sudo unzip instantclient-basic-linux.x64-21.9.0.0.0dbru.zip
+sudo unzip instantclient-sdk-linux.x64-21.9.0.0.0dbru.zip
 sudo unzip instantclient-sqlplus-linux.x64-21.9.0.0.0dbru.zip
+sudo rm instantclient-basic-linux.x64-21.9.0.0.0dbru.zip
+sudo rm instantclient-sdk-linux.x64-21.9.0.0.0dbru.zip
 sudo rm instantclient-sqlplus-linux.x64-21.9.0.0.0dbru.zip
-cd instantclient_21_9/
-sudo mv * /opt/oracle/instantclient_21_9/
-sudo rm -r instantclient_21_9
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG
+sudo mkdir /opt/oracle
+sudo mv instantclient_21_9 /opt/oracle/instantclient
+sudo chown -R root:www-data /opt/oracle/instantclient
+#ln -s /opt/oracle/instantclient/libclntsh.so.21.1 /opt/oracle/instantclient/libclntsh.so
+#ln -s /opt/oracle/instantclient/libocci.so.21.1 /opt/oracle/instantclient/libocci.so
+sudo sh -c "echo /opt/oracle/instantclient > /etc/ld.so.conf.d/oracle-instantclient.conf"
+sudo ldconfig
+sudo pecl channel-update pecl.php.net
+sudo pecl config-set php_ini /etc/php/$PHP_VER/apache2/php.ini
+sudo pecl install oci8
+sudo sed -i 's/;extension=oci8_12c/extension=oci8.so/' "/etc/php/$PHP_VER/apache2/php.ini" #This line is executed due to the error presented in the previous action regarding the php_ini 
+sudo chmod 646 /etc/environment /etc/apache2/envvars
+sudo echo 'LD_LIBRARY_PATH="opt/oracle/instantclient"' >> /etc/environment
+sudo echo 'ORACLE_HOME="opt/oracle/instantclient"' >> /etc/environment
+sudo echo 'LD_LIBRARY_PATH="opt/oracle/instantclient"' >> /etc/apache2/envvars
+sudo echo 'LD_LIBRARY_PATH="opt/oracle/instantclient"' >> /etc/apache2/envvars
+sudo chmod 644 /etc/environment /etc/apache2/envvars
+echo -e "Oracle instant_client installed\n" >>$FILE_LOG
 
 echo -e "Restart develope enviroment\n" >>$FILE_LOG
 bash ~/dev_env_opt.sh restart
-echo -e "---------------------------------------------------------------------------------\n" >>$FILE_LOG

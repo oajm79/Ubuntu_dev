@@ -46,7 +46,7 @@ It is assumed that before running this deployment, Ubuntu is already installed a
     <li>This is the phpMyadmin address: <a href="http://localhost:8081/phpmyadmin">http://localhost:8081/phpmyadmin</a></li>
         <img src="inc\phpmyadmin.png">
     <li>This is the php config address: <a href="http://localhost:8081/phpinfo.php">http://localhost:8081/phpinfo.php</a></li>
-        <img src="inc\php.png">
+        <img src="inc\PHP.png">
         <img src="inc\php_oci8.png">
         <img src="inc\php_xdebug.png">
 </ol>

@@ -42,7 +42,7 @@ FILE_TEXT
 echo -e "Apache installed and configured->\n" >>$FILE_LOG
 
 echo -e "<-Install PHP\n" >>$FILE_LOG
-sudo apt install -y php libapache2-mod-php php-mysql php-xml php-cli php-curl php-zip php-json php-mbstring php-pear php-dev
+sudo apt install -y php libapache2-mod-php php-mysql php-xml php-cli php-curl php-zip php-json php-mbstring php-pear php-dev php-ssh2
 PHP_VER=$(php -v | grep -Po "[0-9]\.[0-9]" | head -n 1)
 echo -e "PHP installed->\n" >>$FILE_LOG
 

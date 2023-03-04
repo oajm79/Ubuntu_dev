@@ -6,9 +6,10 @@ Program to generate a functional WSL development environment on the Ubuntu 22.04
 <ul>
     <li>Apache</li>
     <li>PHP</li>
-    <li>MySQL</li>
+    <li>MySQL or MariaDB</li>
     <li>phpMyAdmin</li>
     <li>Python Virtual Enviroment (Python is already installed on Ubuntu distribution)</li>
+    <li>Django</li>
     <li>Oracle Instant Client</li>
 </ul>
 
